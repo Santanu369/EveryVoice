@@ -10,6 +10,7 @@ import com.example.everyvoice.TextToSpeech.data.Graph
 import com.example.everyvoice.TextToSpeech.data.TextData
 import com.example.everyvoice.TextToSpeech.data.TextRepository
 import com.example.everyvoice.Utils.MyWebSocketListener
+import com.example.everyvoice.VoiceToText.VoiceCallback
 import com.example.everyvoice.VoiceToText.VoiceToTextParserState
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ import com.google.ai.client.generativeai.type.content
 
 class MainViewModel(
     private val textRepository: TextRepository = Graph.textRepository
-): ViewModel() {
+): ViewModel(), VoiceCallback {
 
     private val _state = MutableStateFlow(VoiceToTextParserState())
     val state = _state.asStateFlow()
@@ -34,11 +35,11 @@ class MainViewModel(
     var _title by mutableStateOf("")
     var _text by mutableStateOf("")
 
-    fun startUpdate() {
+    override fun startUpdate() {
         _state.update { VoiceToTextParserState() }
     }
 
-    fun notRecognizing() {
+    override fun notRecognizing() {
         _state.update {
             it.copy(
                 error = "Recognition is not available."
@@ -46,7 +47,7 @@ class MainViewModel(
         }
     }
 
-    fun speaking() {
+    override fun speaking() {
         _state.update {
             it.copy(
                 isSpeaking = true
@@ -54,7 +55,7 @@ class MainViewModel(
         }
     }
 
-    fun stopListening() {
+    override fun stopListening() {
         _state.update {
             it.copy(
                 isSpeaking = false
@@ -62,7 +63,7 @@ class MainViewModel(
         }
     }
 
-    fun onReadyForSpeech() {
+    override fun onReadyForSpeech() {
         _state.update {
             it.copy(
                 error = null
@@ -70,7 +71,7 @@ class MainViewModel(
         }
     }
 
-    fun endOfSpeech() {
+    override fun endOfSpeech() {
         _state.update {
             it.copy(
                 isSpeaking = false
@@ -78,7 +79,7 @@ class MainViewModel(
         }
     }
 
-    fun onError(error: Int) {
+    override fun onError(error: Int) {
         _state.update {
             it.copy(
                 error = "Error = $error"
@@ -86,7 +87,7 @@ class MainViewModel(
         }
     }
 
-    fun onResult(result: String) {
+    override fun onResult(result: String) {
         _state.update {
             it.copy(
                 spokenText = result
@@ -155,36 +156,6 @@ class MainViewModel(
         // Close connection when ViewModel is destroyed
         webSocket?.close(1000, "App closing")
 
-    }
-
-
-    private val apiKey = BuildConfig.GEMINI_API_KEY
-    // State to hold the description
-    val imageDescription = MutableStateFlow("")
-
-    // Initialize the Gemini Model
-    // Note: In a real app, don't hardcode the API key here. Use BuildConfig or secrets.
-    private val generativeModel = GenerativeModel(
-        modelName = "gemini-3-flash-preview", // "flash" is faster and free
-        apiKey = apiKey
-    )
-
-    fun describeImage(bitmap: Bitmap) {
-        viewModelScope.launch {
-            try {
-                val prompt = "Describe this image in detail for a text-to-speech application."
-
-                val inputContent = content {
-                    image(bitmap)
-                    text(prompt)
-                }
-
-                val response = generativeModel.generateContent(inputContent)
-                imageDescription.value = response.text ?: "Could not describe image."
-            } catch (e: Exception) {
-                imageDescription.value = "Error: ${e.localizedMessage}"
-            }
-        }
     }
 
 }

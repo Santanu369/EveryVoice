@@ -45,6 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.everyvoice.ImageRecognizer.ImageDetectionGemini
+import com.example.everyvoice.ImageRecognizer.ImgDetectionViewModel
 import com.example.everyvoice.OCR.OCRcameraXScreen
 import com.example.everyvoice.TextToSpeech.data.Graph
 import com.example.everyvoice.TextToSpeech.ttsUi.AddTextScreen
@@ -61,11 +62,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val viewModel: MainViewModel = viewModel()
+            val ImgViewModel: ImgDetectionViewModel = viewModel()
             EveryVoiceTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         paddingValues = innerPadding,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        ImgViewModel
                     )
                 }
             }
@@ -75,7 +78,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun NavHost(paddingValues: PaddingValues,
-            viewModel: MainViewModel) {
+            viewModel: MainViewModel,
+            imgDetectViewModel: ImgDetectionViewModel) {
 
     val context = LocalContext.current
     val navController = rememberNavController()
@@ -124,7 +128,7 @@ fun NavHost(paddingValues: PaddingValues,
 //              ImgDescriberScreen()
 //            ImgLabelingCameraXScreen()
 //            ImgLabelingScreen()
-            ImageDetectionGemini(viewModel)
+            ImageDetectionGemini(imgDetectViewModel)
         }
 
         composable("textRecognizerScreen") {

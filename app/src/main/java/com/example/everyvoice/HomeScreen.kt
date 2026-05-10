@@ -42,7 +42,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
     ) {
         val tts = rememberTTS()
 
-        Image(painterResource(R.drawable.bg_image2),
+        Image(painterResource(R.drawable.bg_image3),
             contentDescription = "BackGround Image",
             contentScale = ContentScale.FillHeight,
             modifier = Modifier.fillMaxSize()
@@ -55,13 +55,13 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            FeatureCard(text = "Text To Speech",
+            FeatureCard(text = "TEXT TO SPEECH",
                 onclick = {
                     navController.navigate("textToSpeech")
                 })
 
 
-            FeatureCard(text = "Emergency Features",
+            FeatureCard(text = "EMERGENCY FEATURES",
                 modifier = Modifier.clickable {
 //                    navController.navigate("emergencyScreen")
                 })
@@ -72,7 +72,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
                 .horizontalScroll(rememberScrollState())) {
 
                 FeatureCard(
-                    text = "Image Recognizer",
+                    text = "IMAGE RECOGNIZER",
                     onclick = {
                         tts.speak("Image Recognizer")
                     },
@@ -84,7 +84,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
                 )
 
                 FeatureCard(
-                    text = "Text Recognizer",
+                    text = "TEXT RECOGNIZER",
                     onclick = {
                         tts.speak("Text Recognizer")
                     },
@@ -96,7 +96,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
                 )
 
                 FeatureCard(
-                    text = "Sign Language TTS",
+                    text = "SIGN LANGUAGE TTS",
                     onclick = {
                         tts.speak("Sign Language Text To Speech")
                     },
@@ -108,7 +108,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
                 )
 
                 FeatureCard(
-                    text = "Voice To text",
+                    text = "VOICE TO TEXT",
                     onclick = {
                         tts.speak("Voice To text")
                     },
@@ -157,7 +157,7 @@ fun FeatureCard(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
-                color = Color.White,
+                color = Color(0xff1C1C1C),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

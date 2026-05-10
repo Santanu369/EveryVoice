@@ -10,18 +10,18 @@ import com.example.everyvoice.MainViewModel
 
 class VoiceRecog(
     private val context: Context,
-    private val viewModel1: MainViewModel
+    private val callback: VoiceCallback
 ): RecognitionListener {
 
-    val _state = viewModel1.state
+//    val _state = viewModel1.state
 
     val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
     fun startListening(languageCode: String = "en") {
-        viewModel1.startUpdate()
+        callback.startUpdate()
 
         if(!SpeechRecognizer.isRecognitionAvailable(context)) {
-            viewModel1.notRecognizing()
+            callback.notRecognizing()
         }
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -33,17 +33,17 @@ class VoiceRecog(
         recognizer.setRecognitionListener(this)
         recognizer.startListening(intent)
 
-        viewModel1.speaking()
+        callback.speaking()
     }
 
     fun stopListing() {
-        viewModel1.stopListening()
+        callback.stopListening()
 
         recognizer.stopListening()
     }
 
     override fun onReadyForSpeech(p0: Bundle?) {
-        viewModel1.onReadyForSpeech()
+       callback.onReadyForSpeech()
     }
 
     override fun onBeginningOfSpeech() = Unit
@@ -51,11 +51,11 @@ class VoiceRecog(
     override fun onBufferReceived(p0: ByteArray?) = Unit
 
     override fun onEndOfSpeech() {
-        viewModel1.endOfSpeech()
+        callback.endOfSpeech()
     }
 
     override fun onError(error: Int) {
-        viewModel1.onError(error)
+        callback.onError(error)
     }
 
     override fun onEvent(p0: Int, p1: Bundle?) = Unit
@@ -67,7 +67,7 @@ class VoiceRecog(
             ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             ?.getOrNull(0)
             ?.let {  result ->
-                 viewModel1.onResult(result)
+                 callback.onResult(result)
             }
     }
 

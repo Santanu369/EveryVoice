@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -36,12 +38,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.everyvoice.Utils.CameraPreview
-import com.example.everyvoice.MainViewModel
 import com.example.everyvoice.Utils.rememberTTS
+import com.example.everyvoice.VoiceToText.VoiceRecog
 import com.example.everyvoice.ui.theme.MinecraftFont
 
 @Composable
-fun ImageDetectionGemini(viewModel: MainViewModel) {
+fun ImageDetectionGemini(viewModel: ImgDetectionViewModel) {
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
@@ -78,8 +80,30 @@ fun ImageDetectionGemini(viewModel: MainViewModel) {
 fun ImgDetectionCameraUi(
     context: Context,
     cameraController: LifecycleCameraController,
-    viewModel: MainViewModel
+    viewModel: ImgDetectionViewModel
 ) {
+    val voiceToTextParser by lazy {
+        VoiceRecog(context, viewModel)
+    }
+
+    var canRecord by remember {
+        mutableStateOf(false)
+    }
+
+    val recordAudioLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {isGranted ->
+            canRecord = isGranted
+        }
+    )
+
+    LaunchedEffect(recordAudioLauncher) {
+        recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
+
+    val state by viewModel.state.collectAsState()
+
+
     val description by viewModel.imageDescription.collectAsState()
 
     val tts = rememberTTS()
@@ -93,10 +117,16 @@ fun ImgDetectionCameraUi(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                viewModel.imageDescription.value = "Analysing Image..."
+                if (state.isSpeaking) {
+                    voiceToTextParser.stopListing()
+                }
+                else {
+                    voiceToTextParser.startListening()
+                }
+
                 // Take Photo
                 takePhotoImgDetection(context, cameraController) {
-                    viewModel.describeImage(it)
+                    viewModel.imageBitmap.value = it
                 }
             }
     ) {
