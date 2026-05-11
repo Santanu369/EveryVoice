@@ -117,16 +117,19 @@ fun ImgDetectionCameraUi(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                if (state.isSpeaking) {
+                if (viewModel.currentTime - viewModel.latTime < 6000) {
+                    viewModel.latTime = viewModel.currentTime
+                }
+                else if (state.isSpeaking) {
                     voiceToTextParser.stopListing()
                 }
                 else {
                     voiceToTextParser.startListening()
-                }
 
-                // Take Photo
-                takePhotoImgDetection(context, cameraController) {
-                    viewModel.imageBitmap.value = it
+                    // Take Photo
+                    takePhotoImgDetection(context, cameraController) {
+                        viewModel.imageBitmap.value = it
+                    }
                 }
             }
     ) {

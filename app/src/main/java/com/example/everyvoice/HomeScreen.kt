@@ -96,11 +96,25 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
                 )
 
                 FeatureCard(
+                    text = "ESP-CAM OCR TTS",
+                    onclick = {
+                        tts.speak("external camera ocr")
+                    },
+                    onLongClick = {
+//                        navController.navigate("signLangTTS")
+                        navController.navigate("websocketOCRscreen")
+                    },
+//                    height = 500.dp
+                    height = 300.dp
+                )
+
+                FeatureCard(
                     text = "SIGN LANGUAGE TTS",
                     onclick = {
                         tts.speak("Sign Language Text To Speech")
                     },
                     onLongClick = {
+//                        navController.navigate("signLangTTS")
                         navController.navigate("signLangTTS")
                     },
 //                    height = 500.dp

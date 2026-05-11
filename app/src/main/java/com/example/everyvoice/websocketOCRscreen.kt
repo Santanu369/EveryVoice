@@ -1,11 +1,17 @@
 package com.example.everyvoice
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,24 +22,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.everyvoice.Utils.rememberTTS
 
 @Composable
-fun SignLangSST(viewModel: MainViewModel = viewModel()) {
-    val data by viewModel.socketData
+fun websocketORCscreen(viewModel: MainViewModel = viewModel()) {
+    val data by viewModel.socketDataOCR
     val status by viewModel.connectionStatus
 
     val tts = rememberTTS()
 
-    LaunchedEffect(viewModel.latestWord.value) {
-        if (viewModel.latestWord.value.endsWith(" ")) {
-
-            tts.speak("${viewModel.latestWord.value}")
-//            Log.d("ws", "LaunchedEffTriggered")
-
-            viewModel.latestWord.value = ""
-        }
+    LaunchedEffect(viewModel.socketDataOCR.value) {
+        tts.speak(viewModel.socketDataOCR.value)
     }
+
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.latestWord.value = ""
+            viewModel.socketDataOCR.value = ""
         }
     }
 
@@ -44,7 +45,7 @@ fun SignLangSST(viewModel: MainViewModel = viewModel()) {
 //            viewModel.socketData.value = ""
 //            viewModel.socketDataOCR.value = ""
                 viewModel.connectToWebSocket()
-                viewModel.sendMessage("asl")
+                viewModel.sendMessage("ocr")
             },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -58,15 +59,15 @@ fun SignLangSST(viewModel: MainViewModel = viewModel()) {
             text = "Received Data:",
             fontWeight = FontWeight.Bold
         )
-        Text(text = data, fontSize = 24.sp, color = Color.Blue)
+        Text(text = viewModel.socketDataOCR.value, fontSize = 24.sp, color = Color.Blue)
 
 //        Button(onClick = {
 ////            viewModel.latestWord.value = ""
 ////            viewModel.socketData.value = ""
 ////            viewModel.socketDataOCR.value = ""
 //            viewModel.connectToWebSocket()
-//            viewModel.sendMessage("asl")
-//            }) {
+//            viewModel.sendMessage("ocr")
+//        }) {
 //            Text("Connect")
 //        }
     }

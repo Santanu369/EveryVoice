@@ -139,6 +139,11 @@ fun NavHost(paddingValues: PaddingValues,
 //        composable("emergencyScreen") {
 //            EmergencyScreen()
 //        }
+
+        composable("websocketOCRscreen") {
+//              ImgDescriberScreen()
+            websocketORCscreen()
+        }
     }
 }
 

@@ -23,6 +23,9 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
     private val _state = MutableStateFlow(VoiceToTextParserState())
     val state = _state.asStateFlow()
 
+    var latTime = 0L
+    val currentTime = System.currentTimeMillis()
+
     override fun startUpdate() {
         _state.update { VoiceToTextParserState() }
     }
@@ -76,6 +79,7 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
     }
 
     override fun onResult(result: String) {
+        latTime = currentTime
         _state.update {
             it.copy(
                 spokenText = result
@@ -105,7 +109,9 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
         apiKey = apiKey
     )
 
+
     fun describeImage(bitmap: Bitmap, promptText: String = "describe the image") {
+
         viewModelScope.launch {
             try {
                 val prompt = "You are an assistive image description system for visually impaired users.\n" +

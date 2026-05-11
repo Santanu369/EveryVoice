@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import okhttp3.WebSocket
 import okhttp3.OkHttpClient
 import com.google.ai.client.generativeai.type.content
+import org.json.JSONObject
 
 class MainViewModel(
     private val textRepository: TextRepository = Graph.textRepository
@@ -121,7 +122,9 @@ class MainViewModel(
     // Holds the latest received message
     var latestWord = mutableStateOf("")
 
-    var socketData = mutableStateOf("No data yet")
+    var socketData = mutableStateOf("")
+    var socketDataOCR = mutableStateOf("")
+
     var connectionStatus = mutableStateOf("Disconnected")
 
     private var webSocket: WebSocket? = null
@@ -129,14 +132,30 @@ class MainViewModel(
 
     fun connectToWebSocket() {
         val request = okhttp3.Request.Builder()
-            .url("ws://example.com/websocket") // Replace with your URL
+            .url("ws://192.168.1.8:8765") // Replace with your URL
             .build()
 
         val listener = MyWebSocketListener(
             onMessageReceived = { text ->
-                viewModelScope.launch {
-                    socketData.value += text
-                    latestWord.value += text
+                val json = JSONObject(text)
+                // type detection
+                if (json.getString("type") == "ASL") {
+                    val char = json.getString("char")
+
+                    socketData.value += char
+                    latestWord.value += char
+
+                    if (char == "_") {
+                        socketData.value = socketData.value.dropLast(2)
+                        latestWord.value = latestWord.value.dropLast(2)
+                    }
+
+                }
+                else if (json.getString("type") == "OCR") {
+                    socketDataOCR.value = json.getString("text")
+                }
+                else {
+                    socketData.value += "no text lab"
                 }
             },
             onStatusChange = { status ->
@@ -147,8 +166,12 @@ class MainViewModel(
         webSocket = client.newWebSocket(request, listener)
     }
 
-    fun sendMessage(message: String) {
-        webSocket?.send(message)
+    fun sendMessage(mode: String) {
+        val json = JSONObject()
+        json.put("action", "set_mode")
+        json.put("mode", mode)
+
+        webSocket?.send(json.toString())
     }
 
     override fun onCleared() {
