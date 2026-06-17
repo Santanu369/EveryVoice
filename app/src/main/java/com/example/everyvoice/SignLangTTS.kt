@@ -31,6 +31,9 @@ fun SignLangSST(viewModel: MainViewModel = viewModel()) {
             viewModel.latestWord.value = ""
         }
     }
+    LaunchedEffect(viewModel.speakTrigger) {
+        tts.speak(viewModel.lastCharacter.value)
+    }
     DisposableEffect(Unit) {
         onDispose {
             viewModel.latestWord.value = ""

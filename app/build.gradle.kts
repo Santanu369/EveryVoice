@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,11 +52,19 @@ android {
 
 dependencies {
 
+    //fire-base auth
+    implementation("com.google.firebase:firebase-auth-ktx:21.1.0")
+    implementation("com.google.android.gms:play-services-auth:20.4.1")
+
+    // for downloding image from internet
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
 //    implementation("com.google.ai.client.generativeai:generative-ai:0.9.0")
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.generativeai)
     implementation(libs.play.services.location)
+    implementation(libs.filament.android)
 
     // CameraX core library using the camera2 implementation
     val camerax_version = "1.7.0-alpha01"
@@ -123,4 +132,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation("im.zego:zego_uikit_prebuilt_call_android:+")
 }

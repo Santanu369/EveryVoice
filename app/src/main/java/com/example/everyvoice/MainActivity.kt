@@ -4,46 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.everyvoice.Authentication.LogInScreen
+import com.example.everyvoice.Authentication.SignUpScreen
 import com.example.everyvoice.ImageRecognizer.ImageDetectionGemini
 import com.example.everyvoice.ImageRecognizer.ImgDetectionViewModel
 import com.example.everyvoice.OCR.OCRcameraXScreen
@@ -51,13 +23,16 @@ import com.example.everyvoice.TextToSpeech.data.Graph
 import com.example.everyvoice.TextToSpeech.ttsUi.AddTextScreen
 import com.example.everyvoice.TextToSpeech.ttsUi.TextToSpeechGen
 import com.example.everyvoice.TextToSpeech.ttsUi.TextToSpeechScreen
-import com.example.everyvoice.Utils.rememberTTS
+import com.example.everyvoice.VideoCall.JoinCallScreen
+import com.example.everyvoice.VideoCall.ZegoCallScreen
 import com.example.everyvoice.VoiceToText.VoiceToTextScreen
 import com.example.everyvoice.ui.theme.EveryVoiceTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Graph.provide(this)
         enableEdgeToEdge()
         setContent {
@@ -74,6 +49,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }
 
 @Composable
@@ -86,8 +62,21 @@ fun NavHost(paddingValues: PaddingValues,
 
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "signUpScreen"
     ) {
+        composable("signUpScreen") {
+
+            SignUpScreen(
+                navController = navController
+            )
+        }
+
+        composable("LogInScreen") {
+
+            LogInScreen(
+                navController = navController
+            )
+        }
 
         composable("home") {
 
@@ -143,6 +132,17 @@ fun NavHost(paddingValues: PaddingValues,
         composable("websocketOCRscreen") {
 //              ImgDescriberScreen()
             websocketORCscreen()
+        }
+
+        composable("videoCallJoinScreen") {
+            JoinCallScreen(navController)
+        }
+
+        composable("videoCallScreen/{userId}/{userName}") {backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?: ""
+            val userName = backStackEntry.arguments?.getString("userName")?: ""
+
+            ZegoCallScreen(userID = userId, userName = userName)
         }
     }
 }

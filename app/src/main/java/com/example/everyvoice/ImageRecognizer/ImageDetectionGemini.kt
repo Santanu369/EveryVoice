@@ -117,10 +117,7 @@ fun ImgDetectionCameraUi(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                if (viewModel.currentTime - viewModel.latTime < 6000) {
-                    viewModel.latTime = viewModel.currentTime
-                }
-                else if (state.isSpeaking) {
+                if (state.isSpeaking) {
                     voiceToTextParser.stopListing()
                 }
                 else {

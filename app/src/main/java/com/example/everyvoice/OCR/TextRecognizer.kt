@@ -119,7 +119,7 @@ fun OCRCameraUi(
             Spacer(modifier = Modifier.height(125.dp))
 
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Text(text = text, color = Color.Green, fontSize = 24.sp, fontFamily = MinecraftFont)
+                Text(text = text, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont)
             }
 
         }

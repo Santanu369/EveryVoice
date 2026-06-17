@@ -122,17 +122,21 @@ class MainViewModel(
     // Holds the latest received message
     var latestWord = mutableStateOf("")
 
+    var lastCharacter = mutableStateOf("")
+
     var socketData = mutableStateOf("")
     var socketDataOCR = mutableStateOf("")
 
     var connectionStatus = mutableStateOf("Disconnected")
+
+    var speakTrigger by mutableStateOf(0)
 
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
 
     fun connectToWebSocket() {
         val request = okhttp3.Request.Builder()
-            .url("ws://192.168.1.8:8765") // Replace with your URL
+            .url("ws://10.59.232.231:8081") // Replace with your URL
             .build()
 
         val listener = MyWebSocketListener(
@@ -144,6 +148,10 @@ class MainViewModel(
 
                     socketData.value += char
                     latestWord.value += char
+                    lastCharacter.value = char
+
+                    if (char != " ") speakTrigger++
+
 
                     if (char == "_") {
                         socketData.value = socketData.value.dropLast(2)

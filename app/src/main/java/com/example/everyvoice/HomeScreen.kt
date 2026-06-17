@@ -42,11 +42,16 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
     ) {
         val tts = rememberTTS()
 
-        Image(painterResource(R.drawable.bg_image3),
-            contentDescription = "BackGround Image",
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier.fillMaxSize()
-        )
+//        Image(painterResource(R.drawable.bg_image3),
+//            contentDescription = "BackGround Image",
+//            contentScale = ContentScale.FillHeight,
+//            modifier = Modifier.fillMaxSize()
+//        )
+
+        Box(modifier = Modifier.fillMaxSize()
+            .background(Color.Cyan)) {
+
+        }
 
         Column(modifier = Modifier
             .fillMaxSize()
@@ -132,6 +137,18 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
 //                    height = 500.dp
                     height = 300.dp
                 )
+
+                FeatureCard(
+                    text = "Video Call",
+                    onclick = {
+                        tts.speak("Video call")
+                    },
+                    onLongClick = {
+                        navController.navigate("videoCallJoinScreen")
+                    },
+//                    height = 500.dp
+                    height = 300.dp
+                )
             }
 
         }
@@ -153,7 +170,7 @@ fun FeatureCard(
             .padding(top = 16.dp, start = 32.dp, end = 32.dp)
             .width(320.dp)
             .height(height)
-            .clickable { onclick() }
+//            .clickable { onclick() }
             .combinedClickable(
                 onLongClick = { onLongClick() },
                 onClick = { onclick() },
@@ -191,7 +208,7 @@ fun FeatureCard(
 @Composable
 fun GlassMorphism(
     modifier: Modifier = Modifier,
-    blurRadius: Dp =  16.dp,
+    blurRadius: Dp =  0.dp,
     backgroundColor: Color = Color.White.copy(alpha = 0.15f),
     cornerRadius: Dp = 16.dp,
     content: @Composable () -> Unit

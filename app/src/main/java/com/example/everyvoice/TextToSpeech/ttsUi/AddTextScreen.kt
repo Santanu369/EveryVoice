@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.everyvoice.MainViewModel
@@ -59,6 +60,8 @@ fun AddTextScreen(viewModel: MainViewModel,
                     Text("Title")
                 }
             )
+
+            Spacer(modifier = Modifier.height(50.dp))
 
             TextField(
                 value = text,

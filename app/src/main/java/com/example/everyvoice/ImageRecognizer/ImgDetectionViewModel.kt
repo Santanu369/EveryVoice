@@ -79,7 +79,6 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
     }
 
     override fun onResult(result: String) {
-        latTime = currentTime
         _state.update {
             it.copy(
                 spokenText = result

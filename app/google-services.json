@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "856706944176",
+    "project_id": "everyvoice-6f072",
+    "storage_bucket": "everyvoice-6f072.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856706944176:android:e4fdd3c8994313e96aff75",
+        "android_client_info": {
+          "package_name": "com.example.everyvoice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-q9mGWD2vJ25678e86EkjmYvHuC7QRso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
