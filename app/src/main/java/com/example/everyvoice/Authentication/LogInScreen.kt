@@ -72,6 +72,7 @@ fun LogInScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
+    var signInError by remember { mutableStateOf<String?>(null) }
 
     val focusManager = LocalFocusManager.current
     val passwordFocusRequester = remember { FocusRequester() }
@@ -87,7 +88,15 @@ fun LogInScreen(
                         navController.navigate("home")
                     }
                     else {
-                        println("Failed..")
+                        val exception = task.exception    // This gives you the human-readable reason (e.g., "The password is invalid")
+                        signInError = when (exception) {
+                            is com.google.firebase.auth.FirebaseAuthInvalidUserException ->
+                                "No account found with this email."
+                            is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException ->
+                                "Incorrect password. Please try again."
+                            else ->
+                                exception?.localizedMessage ?: "An error occurred. Check your internet."
+                        }
                     }
                 }
         }
@@ -197,6 +206,10 @@ fun LogInScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = AccentBlue, contentColor = Color.White)
             ) {
                 Text("Sign in", fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
+            }
+
+            signInError?.let {
+                ErrorText(it)
             }
 
             Spacer(Modifier.height(28.dp))

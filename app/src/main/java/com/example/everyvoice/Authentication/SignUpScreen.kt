@@ -87,7 +87,9 @@ fun SignUpScreen(
                         navController.navigate("home")
                     }
                     else {
-                        println("Failed..")
+                        val exception = task.exception
+                        val errorMessage = exception?.message ?: "An error occurred"
+                        emailError = errorMessage
                     }
                 }
         }
