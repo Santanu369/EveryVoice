@@ -27,8 +27,13 @@ import com.example.everyvoice.VideoCall.JoinCallScreen
 import com.example.everyvoice.VideoCall.ZegoCallScreen
 import com.example.everyvoice.VoiceToText.VoiceToTextScreen
 import com.example.everyvoice.ui.theme.EveryVoiceTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
+
+    private val auth = FirebaseAuth.getInstance()
+    private var startingDestination = "signUpScreen"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +43,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: MainViewModel = viewModel()
             val ImgViewModel: ImgDetectionViewModel = viewModel()
+
+            if (auth.currentUser != null) {
+                startingDestination = "home"
+            }
             EveryVoiceTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         paddingValues = innerPadding,
                         viewModel = viewModel,
-                        ImgViewModel
+                        ImgViewModel,
+                        startingDestination
                     )
                 }
             }
@@ -55,14 +65,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavHost(paddingValues: PaddingValues,
             viewModel: MainViewModel,
-            imgDetectViewModel: ImgDetectionViewModel) {
+            imgDetectViewModel: ImgDetectionViewModel,
+            startingDestination: String) {
 
     val context = LocalContext.current
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = "signUpScreen"
+        startDestination = startingDestination
     ) {
         composable("signUpScreen") {
 
@@ -80,9 +91,10 @@ fun NavHost(paddingValues: PaddingValues,
 
         composable("home") {
 
-            HomePage(
-                navController = navController
-            )
+            AppleHomeUI()
+//            HomePage(
+//                navController = navController
+//            )
         }
 
         composable("speechToText") {
