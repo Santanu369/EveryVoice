@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.everyvoice.ImageRecognizer.ImageDetectionGemini
 import com.example.everyvoice.ImageRecognizer.ImgDetectionViewModel
+import com.example.everyvoice.OCR.OCRcameraXScreen
 
 // ─── Color tokens ─────────────────────────────────────────────────────────────
 
@@ -63,7 +64,7 @@ private data class NavItem(
 
 private val NAV_ITEMS = listOf(
     NavItem("Home",    Icons.Filled.Home,         Icons.Outlined.Home),
-    NavItem("Search",  Icons.Filled.Search,       Icons.Outlined.Search),
+    NavItem("OCR",  Icons.Filled.FilterCenterFocus,       Icons.Outlined.FilterCenterFocus),
     NavItem("My AI", Icons.Filled.AddAPhoto, Icons.Outlined.AddAPhoto),
     NavItem("Explore", Icons.Filled.Explore,      Icons.Outlined.Explore),
     NavItem("Profile", Icons.Filled.Settings,       Icons.Outlined.Settings),
@@ -100,7 +101,7 @@ fun AppleHomeUI() {
         ) { tab ->
             when (tab) {
                 0 -> HomeTab()
-                1 -> PlaceholderTab("Search",  Icons.Outlined.Search,       "Find anything instantly")
+                1 -> OCRcameraXScreen()
                 2 -> ImageDetectionGemini(ImgViewModel)
                 3 -> PlaceholderTab("Explore", Icons.Outlined.Explore,      "Discover what's new")
                 4 -> PlaceholderTab("Profile", Icons.Outlined.Person,       "Your account & settings")

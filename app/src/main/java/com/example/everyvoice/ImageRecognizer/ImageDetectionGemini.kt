@@ -13,23 +13,32 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +50,9 @@ import com.example.everyvoice.Utils.CameraPreview
 import com.example.everyvoice.Utils.rememberTTS
 import com.example.everyvoice.VoiceToText.VoiceRecog
 import com.example.everyvoice.ui.theme.MinecraftFont
+import com.google.mlkit.common.sdkinternal.model.ModelFileHelper
+
+private val AccentBlue = Color(0xFF0050C8)
 
 @Composable
 fun ImageDetectionGemini(viewModel: ImgDetectionViewModel) {
@@ -74,6 +86,13 @@ fun ImageDetectionGemini(viewModel: ImgDetectionViewModel) {
     }
 
     ImgDetectionCameraUi(context, controller, viewModel)
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.imageDescription.value = ""
+            controller.unbind()
+        }
+    }
 }
 
 @Composable
@@ -116,37 +135,91 @@ fun ImgDetectionCameraUi(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable {
-                if (state.isSpeaking) {
-                    voiceToTextParser.stopListing()
-                }
-                else {
-                    voiceToTextParser.startListening()
-
-                    // Take Photo
-                    takePhotoImgDetection(context, cameraController) {
-                        viewModel.imageBitmap.value = it
-                    }
-                }
-            }
+//            .clickable {
+//                if (state.isSpeaking) {
+//                    voiceToTextParser.stopListing()
+//                }
+//                else {
+//                    voiceToTextParser.startListening()
+//
+//                    // Take Photo
+//                    takePhotoImgDetection(context, cameraController) {
+//                        viewModel.imageBitmap.value = it
+//                    }
+//                }
+//            }
     ) {
         Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 25.dp)) {
+            .fillMaxSize()) {
 
             CameraPreview(
                 controller = cameraController,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
+                    .fillMaxSize()
             )
 
 //            Spacer(modifier = Modifier.height(125.dp))
 
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Text(text = description, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont)
-            }
+//            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+//                Text(text = description, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont)
+//            }
 
+        }
+
+        Box(modifier = Modifier.verticalScroll(rememberScrollState())
+            .padding(start = 50.dp, end = 50.dp, top = 100.dp)
+            .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+            ) {
+
+            // image description over the Camera view
+            Text(text = description, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont,
+                modifier = Modifier.align(Alignment.TopCenter))
+
+        }
+
+        Box(modifier = Modifier.fillMaxSize()
+            .padding(bottom = 15.dp),
+            contentAlignment = Alignment.BottomCenter) {
+            Row(modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd),
+                horizontalArrangement = Arrangement.SpaceEvenly) {
+                Button(
+                    modifier = Modifier.width(150.dp)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AccentBlue,
+                        contentColor = Color.White
+                    ),
+                    onClick = {
+                        if (state.isSpeaking) {
+                            voiceToTextParser.stopListing()
+                        }
+                        else {
+                            voiceToTextParser.startListening()
+
+                            // Take Photo
+                            takePhotoImgDetection(context, cameraController) {
+                                viewModel.imageBitmap.value = it
+                            }
+                        }
+                    }
+                ) {
+                    Text("Take picture")
+                }
+
+                Button(
+                    modifier = Modifier.width(150.dp)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    ),
+                    onClick = {viewModel.imageDescription.value = ""}
+                ) {
+                    Text("Clear Text")
+                }
+            }
         }
     }
 }

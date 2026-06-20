@@ -13,37 +13,44 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.everyvoice.R
+import coil.request.Disposable
 import com.example.everyvoice.Utils.CameraPreview
 import com.example.everyvoice.Utils.rememberTTS
 import com.example.everyvoice.ui.theme.MinecraftFont
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+
+private val AccentBlue = Color(0xFF0050C8)
 
 @Composable
 fun OCRcameraXScreen() {
@@ -77,6 +84,12 @@ fun OCRcameraXScreen() {
     }
 
     OCRCameraUi(context, controller)
+
+    DisposableEffect(Unit) {
+        onDispose {
+            controller.unbind()
+        }
+    }
 }
 
 @Composable
@@ -89,31 +102,13 @@ fun OCRCameraUi(
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .clickable {
-                // Take Photo
-                takePhoto(context, cameraController) {
-                    val image = InputImage.fromBitmap(it, 0)
-                    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
-                    recognizer.process(image).addOnSuccessListener { ocrText ->
-                        Log.d("ws", ocrText.text)
-                        text = ocrText.text
-                        tts.speak(text)
-                    }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(context, "Failed to recognize picture: ${e.message}", Toast.LENGTH_SHORT).show()
-                            tts.speak("Unable to capture Image")
-                        }
-                }
-            }
     ) {
         Column(modifier = Modifier.fillMaxSize()
-            .padding(bottom = 25.dp)) {
+        ) {
 
             CameraPreview(
                 controller = cameraController,
-                modifier = Modifier.fillMaxWidth()
-                    .height(300.dp)
+                modifier = Modifier.fillMaxSize()
             )
 
             Spacer(modifier = Modifier.height(125.dp))
@@ -122,6 +117,62 @@ fun OCRCameraUi(
                 Text(text = text, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont)
             }
 
+        }
+
+        // ocr text preview over the Camera view
+        Box(modifier = Modifier.verticalScroll(rememberScrollState())
+            .padding(start = 50.dp, end = 50.dp, top = 50.dp)
+            .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter) {
+            Text(text = text, color = Color.Green, fontSize = 16.sp, fontFamily = MinecraftFont)
+        }
+
+        // button to take photo
+        Box(modifier = Modifier.fillMaxSize()
+            .padding(bottom = 15.dp),
+            contentAlignment = Alignment.BottomCenter) {
+            Row(modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd),
+                horizontalArrangement = Arrangement.SpaceEvenly) {
+                Button(
+                    modifier = Modifier.width(150.dp)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AccentBlue,
+                        contentColor = Color.White
+                    ),
+                    onClick = {
+                        takePhoto(context, cameraController) {
+                            val image = InputImage.fromBitmap(it, 0)
+                            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+                            recognizer.process(image).addOnSuccessListener { ocrText ->
+                                Log.d("ws", ocrText.text)
+                                text = ocrText.text
+                                tts.speak(text)
+                            }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(context, "Failed to recognize picture: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    tts.speak("Unable to capture Image")
+                                }
+                        }
+                    }
+                ) {
+                    Text("Take picture")
+                }
+
+                Button(
+                    modifier = Modifier.width(150.dp)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    ),
+                    onClick = {}
+                ) {
+                    Text("Clear Text")
+                }
+            }
         }
     }
 }
