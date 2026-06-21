@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.generativeai)
     implementation(libs.play.services.location)
     implementation(libs.filament.android)
+    implementation(libs.androidx.ui)
 
     // CameraX core library using the camera2 implementation
     val camerax_version = "1.7.0-alpha01"

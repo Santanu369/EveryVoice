@@ -91,7 +91,8 @@ fun NavHost(paddingValues: PaddingValues,
 
         composable("home") {
 
-            AppleHomeUI()
+            HomeScreen(navController)
+//            AppleHomeUI()
 //            HomePage(
 //                navController = navController
 //            )

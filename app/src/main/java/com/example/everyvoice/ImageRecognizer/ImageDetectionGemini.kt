@@ -167,7 +167,7 @@ fun ImgDetectionCameraUi(
         }
 
         Box(modifier = Modifier.verticalScroll(rememberScrollState())
-            .padding(start = 50.dp, end = 50.dp, top = 100.dp)
+            .padding(start = 50.dp, end = 50.dp, top = 100.dp, bottom = 100.dp)
             .fillMaxWidth(),
             contentAlignment = Alignment.Center
             ) {
@@ -178,8 +178,9 @@ fun ImgDetectionCameraUi(
 
         }
 
+        // Take pic and Clear text button
         Box(modifier = Modifier.fillMaxSize()
-            .padding(bottom = 15.dp),
+            .padding(bottom = 50.dp),
             contentAlignment = Alignment.BottomCenter) {
             Row(modifier = Modifier.fillMaxWidth()
                 .align(Alignment.BottomEnd),

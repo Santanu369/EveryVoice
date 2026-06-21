@@ -1,10 +1,7 @@
 package com.example.everyvoice
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,225 +11,153 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.everyvoice.Utils.rememberTTS
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Accessibility
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+
+data class CardItem(
+    val title: String,
+    val desc: String,
+    val icon: ImageVector,
+    val iconBg: Color,
+    val iconTint: Color,
+    val route: String
+)
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier, navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize()
-    ) {
-        val tts = rememberTTS()
+fun HomeScreen(navController: NavController) {
 
-//        Image(painterResource(R.drawable.bg_image3),
-//            contentDescription = "BackGround Image",
-//            contentScale = ContentScale.FillHeight,
-//            modifier = Modifier.fillMaxSize()
-//        )
+    val Bg = Color(0xFF0A0A0A)
+    val Surface = Color(0xFF1C1C1E)
+    val TextPrimary = Color(0xFFFFFFFF)
+    val TextSecondary = Color(0xFF8E8E93)
 
-        Box(modifier = Modifier.fillMaxSize()
-            .background(Color.Cyan)) {
+    val cards = listOf(
+        CardItem("Saved texts",  "Browse and replay saved items",   Icons.Default.Bookmark,     Color(0xFF1E1A3A), Color(0xFF7B6FCC), "savedTexts"),
+        CardItem("Recent",       "Pick up where you left off",      Icons.Default.History,      Color(0xFF0F2A22), Color(0xFF2EAF82), "history"),
+        CardItem("Voice",        "Speed, pitch and accent",         Icons.Default.Tune,         Color(0xFF2A1F0A), Color(0xFFCC8A2E), "voiceSettings"),
+        CardItem("Accessibility","Screen reader & contrast",        Icons.Default.Accessibility,Color(0xFF2A140A), Color(0xFFCC5A2E), "accessibility")
+    )
 
-        }
+    Scaffold(containerColor = Bg) { padding ->
+        LazyColumn(
+            Modifier.fillMaxSize().padding(padding).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            FeatureCard(text = "TEXT TO SPEECH",
-                onclick = {
-                    navController.navigate("textToSpeech")
-                })
-
-
-            FeatureCard(text = "EMERGENCY FEATURES",
-                modifier = Modifier.clickable {
-//                    navController.navigate("emergencyScreen")
-                })
-
-            Spacer(modifier = Modifier.height(50.dp))
-
-            Row(modifier = Modifier
-                .horizontalScroll(rememberScrollState())) {
-
-                FeatureCard(
-                    text = "IMAGE RECOGNIZER",
-                    onclick = {
-                        tts.speak("Image Recognizer")
-                    },
-                    onLongClick = {
-                        navController.navigate("imgLabelingScreen")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
-
-                FeatureCard(
-                    text = "TEXT RECOGNIZER",
-                    onclick = {
-                        tts.speak("Text Recognizer")
-                    },
-                    onLongClick = {
-                        navController.navigate("textRecognizerScreen")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
-
-                FeatureCard(
-                    text = "ESP-CAM OCR TTS",
-                    onclick = {
-                        tts.speak("external camera ocr")
-                    },
-                    onLongClick = {
-//                        navController.navigate("signLangTTS")
-                        navController.navigate("websocketOCRscreen")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
-
-                FeatureCard(
-                    text = "SIGN LANGUAGE TTS",
-                    onclick = {
-                        tts.speak("Sign Language Text To Speech")
-                    },
-                    onLongClick = {
-//                        navController.navigate("signLangTTS")
-                        navController.navigate("signLangTTS")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
-
-                FeatureCard(
-                    text = "VOICE TO TEXT",
-                    onclick = {
-                        tts.speak("Voice To text")
-                    },
-                    onLongClick = {
-                        navController.navigate("speechToText")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
-
-                FeatureCard(
-                    text = "Video Call",
-                    onclick = {
-                        tts.speak("Video call")
-                    },
-                    onLongClick = {
-                        navController.navigate("videoCallJoinScreen")
-                    },
-//                    height = 500.dp
-                    height = 300.dp
-                )
+            // Header
+            item {
+                Column(Modifier.fillMaxWidth().padding(vertical = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row {
+                        Text("Every", fontSize = 30.sp, fontWeight = FontWeight.Bold,
+                            color = TextPrimary, letterSpacing = (-0.8).sp)
+                        Text("Voice", fontSize = 30.sp, fontWeight = FontWeight.Bold,
+                            color = Color(0xFF378ADD), letterSpacing = (-0.8).sp)
+                    }
+                    Text("Your words, heard by the world",
+                        fontSize = 13.sp, color = TextSecondary, modifier = Modifier.padding(top = 4.dp))
+                }
             }
 
-        }
+            // Hero card
+            item {
+                Column(
+                    Modifier.fillMaxWidth()
+                        .background(Surface, RoundedCornerShape(16.dp))
+                        .clickable { navController.navigate("imgLabelingScreen") }
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(Modifier.size(60.dp).background(Color(0xFF1A2F4A), RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center) {
+                        Icon(Icons.Default.PhotoCamera, null, Modifier.size(28.dp), tint = Color(0xFF4A8DFF))
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Text("MY AI", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                    Text("AI image description",
+                        fontSize = 13.sp, color = TextSecondary, modifier = Modifier.padding(top = 3.dp))
+                }
+            }
 
+            // Full-width card
+            item { NavCard(cards[0], Surface, TextPrimary, TextSecondary, navController) }
+
+            // 2-column row
+            item {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    SmallCard(cards[1], Surface, TextPrimary, TextSecondary, navController, Modifier.weight(1f))
+                    SmallCard(cards[2], Surface, TextPrimary, TextSecondary, navController, Modifier.weight(1f))
+                }
+            }
+
+            // Full-width card
+            item { NavCard(cards[3], Surface, TextPrimary, TextSecondary, navController) }
+        }
     }
 }
 
 @Composable
-fun FeatureCard(
-    modifier: Modifier = Modifier,
-    text: String,
-    onclick: () -> Unit = {},
-    onLongClick: () -> Unit = {},
-    height: Dp = 100.dp
-) {
-
-    GlassMorphism(
-        modifier = Modifier
-            .padding(top = 16.dp, start = 32.dp, end = 32.dp)
-            .width(320.dp)
-            .height(height)
-//            .clickable { onclick() }
-            .combinedClickable(
-                onLongClick = { onLongClick() },
-                onClick = { onclick() },
-            ),
-        blurRadius = 32.dp
+fun NavCard(item: CardItem, surface: Color, tp: Color, ts: Color, nav: NavController) {
+    Row(
+        Modifier.fillMaxWidth().background(surface, RoundedCornerShape(16.dp))
+            .clickable { nav.navigate(item.route) }.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = text,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
-                color = Color(0xff1C1C1C),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Text(
-//                    text = "Beyoncé (born 1981) is an American singer, songwriter, actress, and businesswoman. She rose to fame in the late 1990s as the lead vocalist of Destiny's Child, one of the best-selling girl groups.",
-//                    fontSize = 16.sp,
-//                    color = Color.White.copy(alpha = 0.7f),
-//                    textAlign = TextAlign.Center,
-//                    modifier = Modifier.fillMaxSize()
-//                )
+        Box(Modifier.size(50.dp).background(item.iconBg, RoundedCornerShape(14.dp)),
+            contentAlignment = Alignment.Center) {
+            Icon(item.icon, null, Modifier.size(24.dp), tint = item.iconTint)
         }
+        Column(Modifier.weight(1f)) {
+            Text(item.title, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = tp)
+            Text(item.desc, fontSize = 12.sp, color = ts)
+        }
+        Icon(Icons.Default.ChevronRight, null, Modifier.size(18.dp), tint = ts)
     }
-
 }
 
 @Composable
-fun GlassMorphism(
-    modifier: Modifier = Modifier,
-    blurRadius: Dp =  0.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.15f),
-    cornerRadius: Dp = 16.dp,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .clip(
-                RoundedCornerShape(cornerRadius)
-            )
-            .background(Color.Transparent)
+fun SmallCard(item: CardItem, surface: Color, tp: Color, ts: Color, nav: NavController, modifier: Modifier) {
+    Column(
+        modifier.background(surface, RoundedCornerShape(16.dp))
+            .clickable { nav.navigate(item.route) }.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .clip(RoundedCornerShape(cornerRadius))
-                .background(backgroundColor)
-                .blur(radius = blurRadius)
-        )
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .padding(16.dp)
-        ) {
-            content()
+        Box(Modifier.size(44.dp).background(item.iconBg, RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center) {
+            Icon(item.icon, null, Modifier.size(20.dp), tint = item.iconTint)
         }
+        Text(item.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = tp)
+        Text(item.desc, fontSize = 11.sp, color = ts)
     }
+}
+
+@Preview
+@Composable
+fun HomePreview() {
+    HomeScreen(rememberNavController())
 }
