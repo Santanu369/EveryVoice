@@ -52,6 +52,22 @@ android {
 
 dependencies {
 
+    // Agora SDK (Video calling service)
+    implementation("io.agora.rtc:full-sdk:3.7.0")
+
+    // Jetpack Compose (already included if you use Compose)
+    implementation("androidx.compose.ui:ui:1.5.0")
+    implementation("androidx.compose.material3:material3:1.1.0")
+
+    // Permissions
+    implementation("androidx.activity:activity-compose:1.7.2")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+
     //fire-base auth
     implementation("com.google.firebase:firebase-auth-ktx:21.1.0")
     implementation("com.google.android.gms:play-services-auth:20.4.1")
@@ -134,5 +150,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    implementation("im.zego:zego_uikit_prebuilt_call_android:+")
+    implementation(libs.agora.rtc)
 }

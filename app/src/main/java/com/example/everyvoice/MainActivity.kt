@@ -1,6 +1,7 @@
 package com.example.everyvoice
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -23,8 +24,7 @@ import com.example.everyvoice.TextToSpeech.data.Graph
 import com.example.everyvoice.TextToSpeech.ttsUi.AddTextScreen
 import com.example.everyvoice.TextToSpeech.ttsUi.TextToSpeechGen
 import com.example.everyvoice.TextToSpeech.ttsUi.TextToSpeechScreen
-import com.example.everyvoice.VideoCall.JoinCallScreen
-import com.example.everyvoice.VideoCall.ZegoCallScreen
+import com.example.everyvoice.VideoCall.VideoCallApp
 import com.example.everyvoice.VoiceToText.VoiceToTextScreen
 import com.example.everyvoice.ui.theme.EveryVoiceTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -147,15 +147,15 @@ fun NavHost(paddingValues: PaddingValues,
             websocketORCscreen()
         }
 
-        composable("videoCallJoinScreen") {
-            JoinCallScreen(navController)
+        composable(Route.videoCallingScreen) {
+            VideoCallApp()
         }
 
         composable("videoCallScreen/{userId}/{userName}") {backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?: ""
             val userName = backStackEntry.arguments?.getString("userName")?: ""
 
-            ZegoCallScreen(userID = userId, userName = userName)
+//            ZegoCallScreen(userID = userId, userName = userName)
         }
     }
 }

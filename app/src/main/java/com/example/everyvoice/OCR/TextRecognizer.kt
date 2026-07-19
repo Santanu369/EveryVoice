@@ -102,6 +102,7 @@ fun OCRCameraUi(
 
     Box(
         modifier = Modifier.fillMaxSize()
+            .padding(bottom = 35.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()
         ) {
@@ -168,7 +169,10 @@ fun OCRCameraUi(
                         containerColor = Color.Black,
                         contentColor = Color.White
                     ),
-                    onClick = {}
+                    onClick = {
+                        text = ""
+                        tts.stop()
+                    }
                 ) {
                     Text("Clear Text")
                 }

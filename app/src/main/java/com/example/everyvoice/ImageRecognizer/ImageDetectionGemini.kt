@@ -200,6 +200,7 @@ fun ImgDetectionCameraUi(
                             voiceToTextParser.startListening()
 
                             // Take Photo
+                            Log.d("ws", "button clicked!")
                             takePhotoImgDetection(context, cameraController) {
                                 viewModel.imageBitmap.value = it
                             }

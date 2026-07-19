@@ -28,6 +28,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.CenterFocusStrong
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -56,10 +57,11 @@ fun HomeScreen(navController: NavController) {
     val TextSecondary = Color(0xFF8E8E93)
 
     val cards = listOf(
-        CardItem("Saved texts",  "Browse and replay saved items",   Icons.Default.Bookmark,     Color(0xFF1E1A3A), Color(0xFF7B6FCC), "savedTexts"),
-        CardItem("Recent",       "Pick up where you left off",      Icons.Default.History,      Color(0xFF0F2A22), Color(0xFF2EAF82), "history"),
-        CardItem("Voice",        "Speed, pitch and accent",         Icons.Default.Tune,         Color(0xFF2A1F0A), Color(0xFFCC8A2E), "voiceSettings"),
-        CardItem("Accessibility","Screen reader & contrast",        Icons.Default.Accessibility,Color(0xFF2A140A), Color(0xFFCC5A2E), "accessibility")
+        CardItem("Sign Language TTS",  "sign language tts from external device",   Icons.Default.Bookmark,     Color(0xFF1E1A3A), Color(0xFF7B6FCC), "signLangTTS"),
+        CardItem("Voice To Text",       "convert voice to text",      Icons.Default.History,      Color(0xFF0F2A22), Color(0xFF2EAF82), "speechToText"),
+        CardItem("Text To speech",        "convert text to speech",         Icons.Default.Tune,         Color(0xFF2A1F0A), Color(0xFFCC8A2E),
+            "textToSpeech"),
+        CardItem("OCR","text recognizer",        Icons.Default.CenterFocusStrong,Color(0xFF2A140A), Color(0xFFCC5A2E), "textRecognizerScreen")
     )
 
     Scaffold(containerColor = Bg) { padding ->

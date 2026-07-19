@@ -1,6 +1,7 @@
 package com.example.everyvoice.ImageRecognizer
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -79,6 +80,7 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
     }
 
     override fun onResult(result: String) {
+        Log.d("ws", "ON Result called!")
         _state.update {
             it.copy(
                 spokenText = result
@@ -130,7 +132,8 @@ class ImgDetectionViewModel: ViewModel(), VoiceCallback {
                 }
 
                 val response = generativeModel.generateContent(inputContent)
-                imageDescription.value = response.text ?: "Could not describe image."
+                imageDescription.value = response.text ?: ""
+                Log.d("ws", imageDescription.value)
             } catch (e: Exception) {
                 imageDescription.value = "Error: ${e.localizedMessage}"
             }
